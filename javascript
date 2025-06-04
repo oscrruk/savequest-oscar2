@@ -1,4 +1,6 @@
-script.jslet totalSaved = parseFloat(localStorage.getItem("totalSaved")) || 0;
+script.js
+
+let totalSaved = parseFloat(localStorage.getItem("totalSaved")) || 0;
 
 function calculateEXP(savedAmount) {
   return Math.floor(savedAmount / 0.5);
