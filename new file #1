@@ -1,0 +1,144 @@
+savequest-oscar/
+
+index.html 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SaveQuest: Oscar's Journey</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>💰 SaveQuest: Oscar's Journey</h1>
+    <p>Every £0.50 saved = 1 EXP ⚔️</p>
+
+    <div class="stats">
+      <p><strong>Total Saved:</strong> £<span id="totalSaved">0.00</span></p>
+      <p><strong>EXP:</strong> <span id="exp">0</span></p>
+      <p><strong>Level:</strong> <span id="level">1</span></p>
+      <div class="progress-bar">
+        <div class="fill" id="progressFill"></div>
+      </div>
+      <p><span id="expToNext"></span> EXP to next level</p>
+    </div>
+
+    <div class="input-group">
+      <input type="number" id="saveInput" placeholder="How much did you save?" step="0.01" min="0"/>
+      <button onclick="addSavings()">Add Savings</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+style.cssbody {
+  font-family: 'Segoe UI', sans-serif;
+  background: #1e1e2f;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 500px;
+  margin: 50px auto;
+  background: #2c2f48;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+h1 {
+  text-align: center;
+  color: #f9dc5c;
+}
+
+.stats {
+  margin-bottom: 20px;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+}
+
+input[type="number"] {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+button {
+  padding: 10px 20px;
+  background: #57cc99;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.progress-bar {
+  background: #444;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 20px;
+  margin: 10px 0;
+}
+
+.fill {
+  height: 100%;
+  background: #80ed99;
+  width: 0%;
+  transition: width 0.4s ease-in-out;
+}
+script.js let totalSaved = parseFloat(localStorage.getItem("totalSaved")) || 0;
+
+function calculateEXP(savedAmount) {
+  return Math.floor(savedAmount / 0.5);
+}
+
+function expForLevel(level) {
+  return 50 * level * (level - 1);
+}
+
+function getLevel(exp) {
+  let level = 1;
+  while (exp >= expForLevel(level + 1)) {
+    level++;
+  }
+  return level;
+}
+
+function updateDisplay() {
+  const exp = calculateEXP(totalSaved);
+  const level = getLevel(exp);
+  const nextLevelExp = expForLevel(level + 1);
+  const currentLevelExp = expForLevel(level);
+  const progress = ((exp - currentLevelExp) / (nextLevelExp - currentLevelExp)) * 100;
+
+  document.getElementById("totalSaved").innerText = totalSaved.toFixed(2);
+  document.getElementById("exp").innerText = exp;
+  document.getElementById("level").innerText = level;
+  document.getElementById("expToNext").innerText = ${nextLevelExp - exp};
+  document.getElementById("progressFill").style.width = ${progress}%;
+}
+
+function addSavings() {
+  const input = document.getElementById("saveInput");
+  const value = parseFloat(input.value);
+  if (isNaN(value) || value <= 0) return;
+
+  totalSaved += value;
+  localStorage.setItem("totalSaved", totalSaved);
+  input.value = "";
+  updateDisplay();
+}
+
+updateDisplay();
