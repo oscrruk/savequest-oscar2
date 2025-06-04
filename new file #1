@@ -1,7 +1,7 @@
 savequest-oscar/
-
-index.html 
-
+├── index.html
+├── style.css
+└── script.js
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,8 +34,7 @@ index.html
   <script src="script.js"></script>
 </body>
 </html>
-
-style.cssbody {
+body {
   font-family: 'Segoe UI', sans-serif;
   background: #1e1e2f;
   color: #fff;
@@ -98,7 +97,7 @@ button {
   width: 0%;
   transition: width 0.4s ease-in-out;
 }
-script.js let totalSaved = parseFloat(localStorage.getItem("totalSaved")) || 0;
+let totalSaved = parseFloat(localStorage.getItem("totalSaved")) || 0;
 
 function calculateEXP(savedAmount) {
   return Math.floor(savedAmount / 0.5);
