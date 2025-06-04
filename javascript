@@ -1,63 +1,44 @@
-script.js body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #1e1e2f;
-  color: #fff;
-  margin: 0;
-  padding: 0;
+script.jslet totalSaved = parseFloat(localStorage.getItem("totalSaved")) || 0;
+
+function calculateEXP(savedAmount) {
+  return Math.floor(savedAmount / 0.5);
 }
 
-.container {
-  max-width: 500px;
-  margin: 50px auto;
-  background: #2c2f48;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+function expForLevel(level) {
+  return 50 * level * (level - 1);
 }
 
-h1 {
-  text-align: center;
-  color: #f9dc5c;
+function getLevel(exp) {
+  let level = 1;
+  while (exp >= expForLevel(level + 1)) {
+    level++;
+  }
+  return level;
 }
 
-.stats {
-  margin-bottom: 20px;
+function updateDisplay() {
+  const exp = calculateEXP(totalSaved);
+  const level = getLevel(exp);
+  const nextLevelExp = expForLevel(level + 1);
+  const currentLevelExp = expForLevel(level);
+  const progress = ((exp - currentLevelExp) / (nextLevelExp - currentLevelExp)) * 100;
+
+  document.getElementById("totalSaved").innerText = totalSaved.toFixed(2);
+  document.getElementById("exp").innerText = exp;
+  document.getElementById("level").innerText = level;
+  document.getElementById("expToNext").innerText = ${nextLevelExp - exp};
+  document.getElementById("progressFill").style.width = ${progress}%;
 }
 
-.input-group {
-  display: flex;
-  gap: 10px;
+function addSavings() {
+  const input = document.getElementById("saveInput");
+  const value = parseFloat(input.value);
+  if (isNaN(value) || value <= 0) return;
+
+  totalSaved += value;
+  localStorage.setItem("totalSaved", totalSaved);
+  input.value = "";
+  updateDisplay();
 }
 
-input[type="number"] {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-}
-
-button {
-  padding: 10px 20px;
-  background: #57cc99;
-  color: #000;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.progress-bar {
-  background: #444;
-  border-radius: 10px;
-  overflow: hidden;
-  height: 20px;
-  margin: 10px 0;
-}
-
-.fill {
-  height: 100%;
-  background: #80ed99;
-  width: 0%;
-  transition: width 0.4s ease-in-out;
-}
+updateDisplay();
